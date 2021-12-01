@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Nav from '..';
 
@@ -8,6 +8,8 @@ const categories = [
 ]
 const mockCurrentCategory = jest.fn();
 const mockSetCurrentCategory = jest.fn();
+const mockContactSelected = jest.fn();
+const mockSetContactSelected = jest.fn();
 
 afterEach(cleanup);
 
@@ -18,6 +20,8 @@ describe('Nav component', () => {
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
         />);
     })
 
@@ -27,6 +31,8 @@ describe('Nav component', () => {
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
         />);
         // assert value comparison
         expect(asFragment()).toMatchSnapshot();
@@ -40,6 +46,8 @@ describe('emoji is visible', () => {
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
         />);
         // Assert
         expect(getByLabelText('camera')).toHaveTextContent('📸');
@@ -52,8 +60,27 @@ describe('links are visible', () => {
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
         />)
         expect(getByTestId('link')).toHaveTextContent('Oh Snap!');
         expect(getByTestId('about')).toHaveTextContent('About me');
     });
 })
+
+describe('onClick events', () => {
+    it('calls the click handler when clicked', () => {
+      const { getByText } = render(<Nav
+        categories={categories}
+        setCurrentCategory={mockSetCurrentCategory}
+        currentCategory={mockCurrentCategory}
+        contactSelected={mockContactSelected}
+        setContactSelected={mockSetContactSelected}
+      />);
+      fireEvent.click(getByText('About me'))
+      fireEvent.click(getByText('Contact'))
+      fireEvent.click(getByText('Portraits'))
+  
+      expect(mockSetContactSelected).toHaveBeenCalledTimes(3);
+    });
+  })
