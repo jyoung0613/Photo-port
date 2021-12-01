@@ -17,7 +17,7 @@ function ContactForm() {
   };
 
   function handleChange(e) {
-    
+
     if (e.target.name === "email") {
       const isValid = validateEmail(e.target.value);
       console.log(isValid);
@@ -34,8 +34,9 @@ function ContactForm() {
         setErrorMessage("");
       }
     }
-    setFormState({ ...formState, [e.target.name]: e.target.value });
-    console.log('errorMessage', errorMessage);
+    if (!errorMessage) {
+      setFormState({ ...formState, [e.target.name]: e.target.value });
+    }
   }
 
   return (
@@ -45,7 +46,7 @@ function ContactForm() {
         <div>
           <label htmlFor="name">Name:</label>
           <input
-            onChange={handleChange}
+            onBlur={handleChange}
             type="text"
             name="name"
             defaultValue={name}
@@ -54,7 +55,7 @@ function ContactForm() {
         <div>
           <label htmlFor="email">Email address:</label>
           <input
-            onChange={handleChange}
+            onBlur={handleChange}
             type="email"
             name="email"
             defaultValue={email}
@@ -63,12 +64,17 @@ function ContactForm() {
         <div>
           <label htmlFor="message">Message:</label>
           <textarea
-            onChange={handleChange}
+            onBlur={handleChange}
             name="message"
             rows="5"
             defaultValue={message}
           />
         </div>
+        {errorMessage && (
+          <div>
+            <p className="error-text">{errorMessage}</p>
+          </div>
+        )}
         <button type="submit">Submit</button>
       </form>
     </section>
